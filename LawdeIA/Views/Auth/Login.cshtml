@@ -1,0 +1,442 @@
+﻿@model LoginViewModel
+@{
+    Layout = null;
+    ViewData["Title"] = "LAWDGE IA - Login";
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Urbanist:wght@700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --color-primary: #1a1a1a;
+            --color-secondary: #f8f9fa;
+            --color-accent: #334155;
+            --color-border: #e2e8f0;
+            --color-text: #1a1a1a;
+            --color-text-light: #64748b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            background: white;
+            overflow: hidden;
+        }
+
+        .login-container {
+            display: flex;
+            height: 100vh;
+            max-height: 100vh;
+        }
+
+        /* Left Side - Login Form */
+        .login-left {
+            flex: 0 0 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            background: white;
+            overflow: hidden;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 380px;
+            max-height: 95vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .scroll-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0.5rem 0;
+            max-height: calc(95vh - 2rem);
+        }
+
+            .scroll-content::-webkit-scrollbar {
+                width: 4px;
+            }
+
+            .scroll-content::-webkit-scrollbar-track {
+                background: #f1f1f1;
+                border-radius: 2px;
+            }
+
+            .scroll-content::-webkit-scrollbar-thumb {
+                background: #c1c1c1;
+                border-radius: 2px;
+            }
+
+                .scroll-content::-webkit-scrollbar-thumb:hover {
+                    background: #a8a8a8;
+                }
+
+        .brand-logo {
+            font-family: 'Urbanist', sans-serif;
+            font-size: 1.7rem;
+            font-weight: 900;
+            color: var(--color-primary);
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-title {
+            font-family: 'Urbanist', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--color-primary);
+            text-align: center;
+            margin-bottom: 1.2rem;
+        }
+
+        .google-login-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 9px 14px;
+            border: 2px solid var(--color-border);
+            border-radius: 8px;
+            background: white;
+            color: var(--color-text);
+            font-weight: 500;
+            margin-bottom: 1.2rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-size: 0.8rem;
+        }
+
+            .google-login-btn:hover {
+                border-color: var(--color-primary);
+                background: var(--color-secondary);
+                transform: translateY(-1px);
+            }
+
+            .google-login-btn i {
+                margin-right: 8px;
+                font-size: 0.9rem;
+                color: #4285F4;
+            }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 1.2rem 0;
+            color: var(--color-text-light);
+            font-size: 0.75rem;
+        }
+
+            .divider::before,
+            .divider::after {
+                content: '';
+                flex: 1;
+                border-bottom: 1px solid var(--color-border);
+            }
+
+            .divider span {
+                padding: 0 0.6rem;
+            }
+
+        .form-control {
+            border: 2px solid var(--color-border);
+            border-radius: 6px;
+            padding: 8px 10px;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+            background: white;
+            height: 38px;
+            width: 100%;
+        }
+
+            .form-control:focus {
+                border-color: var(--color-primary);
+                box-shadow: 0 0 0 2px rgba(26, 26, 26, 0.1);
+            }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--color-text);
+            margin-bottom: 0.3rem;
+            font-size: 0.8rem;
+            display: block;
+        }
+
+        .btn-login {
+            background: var(--color-primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 9px 14px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+            width: 100%;
+            height: 38px;
+            margin-top: 0.3rem;
+        }
+
+            .btn-login:hover {
+                background: #000;
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(26, 26, 26, 0.3);
+            }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            margin: 1.2rem 0;
+            font-size: 0.75rem;
+        }
+
+            .remember-me input {
+                margin-right: 6px;
+                transform: scale(1.1);
+            }
+
+            .remember-me label {
+                color: var(--color-text);
+                font-weight: 500;
+            }
+
+        .signup-link {
+            text-align: center;
+            margin: 1.2rem 0 0.8rem;
+            font-size: 0.75rem;
+        }
+
+            .signup-link a {
+                color: var(--color-primary);
+                text-decoration: none;
+                font-weight: 600;
+                transition: color 0.3s ease;
+            }
+
+                .signup-link a:hover {
+                    color: var(--color-accent);
+                }
+
+        .terms {
+            text-align: center;
+            color: var(--color-text-light);
+            font-size: 0.65rem;
+            line-height: 1.2;
+            margin-top: 0.8rem;
+        }
+
+            .terms a {
+                color: var(--color-primary);
+                text-decoration: none;
+                font-weight: 500;
+            }
+
+                .terms a:hover {
+                    text-decoration: underline;
+                }
+
+        .validation-summary-errors {
+            font-size: 0.75rem;
+            padding: 0.4rem;
+            border-radius: 4px;
+            margin-bottom: 0.8rem;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+            .validation-summary-errors ul {
+                list-style: none;
+                margin: 0;
+                padding: 0;
+            }
+
+            .validation-summary-errors li {
+                margin: 0.2rem 0;
+            }
+
+        .field-validation-error {
+            font-size: 0.7rem;
+            display: block;
+            margin-top: 0.2rem;
+            color: #dc3545;
+        }
+
+        /* Right Side - Image */
+        .login-right {
+            flex: 0 0 50%;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d3748 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .image-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            padding: 0;
+        }
+
+        .login-image {
+            width: 115%;
+            height: 115%;
+            object-fit: cover;
+        }
+
+        /* Responsive */
+        @@media (max-width: 768px) {
+            .login-container {
+                flex-direction: column-reverse;
+                height: 100vh;
+            }
+
+            .login-left {
+                flex: 1;
+                padding: 0.8rem;
+            }
+
+            .login-right {
+                flex: 0 0 40vh;
+                padding: 0;
+            }
+
+            .login-card {
+                max-height: 100%;
+            }
+
+            .scroll-content {
+                max-height: calc(100vh - 40vh - 2rem);
+            }
+
+            .login-image {
+                height: 100%;
+                object-fit: cover;
+            }
+        }
+
+        @@media (max-height: 700px) {
+            .brand-logo {
+                font-size: 1.5rem;
+                margin-bottom: 0.3rem;
+            }
+
+            .login-title {
+                font-size: 1.1rem;
+                margin-bottom: 1rem;
+            }
+
+            .form-control {
+                height: 36px;
+                padding: 7px 9px;
+            }
+
+            .btn-login {
+                height: 36px;
+                padding: 8px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <!-- Left Side - Login Form -->
+        <div class="login-left">
+            <div class="login-card">
+                <div class="scroll-content">
+                    <div class="brand-logo">
+                        <i class="fas fa-gavel me-2"></i>LAWDGE IA
+                    </div>
+                    <div class="login-title">Log into your account</div>
+
+                    <!-- Google Login Button -->
+                    <a href="#" class="google-login-btn">
+                        <i class="fab fa-google"></i>
+                        Login with Google
+                    </a>
+
+                    <!-- Divider -->
+                    <div class="divider">
+                        <span>or continue with</span>
+                    </div>
+
+                    <!-- Email/Password Form -->
+                    <form asp-action="Login" method="post">
+                        <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label">Email address</label>
+                            <input asp-for="Email" class="form-control" placeholder="Enter your email" />
+                            <span asp-validation-for="Email" class="field-validation-error"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Password" class="form-label">Password</label>
+                            <input asp-for="Password" type="password" class="form-control" placeholder="Enter your password" />
+                            <span asp-validation-for="Password" class="field-validation-error"></span>
+                        </div>
+
+                        <div class="remember-me">
+                            <input asp-for="RememberMe" />
+                            <label asp-for="RememberMe">Remember me</label>
+                        </div>
+
+                        <button type="submit" class="btn-login">
+                            <i class="fas fa-sign-in-alt me-2"></i>Sign in
+                        </button>
+                    </form>
+
+                    <div class="signup-link">
+                        Don't have an account? <a asp-action="Register">Sign up</a>
+                    </div>
+
+                    <div class="terms">
+                        By continuing, you agree to LAWDGE IA's <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side - Image -->
+        <div class="login-right">
+            <div class="image-container">
+                <img src="~/images/logo.png" alt="Legal AI Assistant" class="login-image"
+                     onerror="this.style.display='none'">
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Validation Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+</body>
+</html>

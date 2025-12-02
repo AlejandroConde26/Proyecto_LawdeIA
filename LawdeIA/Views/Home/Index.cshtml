@@ -1,0 +1,1326 @@
+﻿@{
+    Layout = null;
+    ViewData["Title"] = "LadweIA - Claridad Legal con IA";
+}
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LadweIA - Claridad Legal con IA</title>
+
+    <!-- Fuentes elegantes y modernas -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Urbanist:wght@700;800;900&display=swap"
+          rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- ESTILOS INLINE (Minimalista, Alto Contraste, Elegancia) -->
+    <style>
+        :root {
+            --color-primary: #1a1a1a;
+            /* Negro Carbón */
+            --color-secondary: #f0f0f0;
+            /* Gris Claro */
+            --color-accent: #334155;
+            /* Gris Pizarra Oscuro para acentos sutiles */
+            --color-text: #1a1a1a;
+            --color-text-invert: #f0f0f0;
+            --font-heading: 'Urbanist', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --section-padding: 80px 40px;
+        }
+
+        /* --- Base & Tipografía --- */
+        body {
+            font-family: var(--font-body);
+            color: var(--color-text);
+            background-color: var(--color-secondary);
+            margin: 0;
+            line-height: 1.6;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        section {
+            padding: var(--section-padding);
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            font-family: var(--font-heading);
+            line-height: 1.1;
+            margin-top: 0;
+        }
+
+        h1 {
+            font-size: clamp(3rem, 7vw, 5.5rem);
+            font-weight: 900;
+        }
+
+        h2 {
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            font-weight: 800;
+        }
+
+        .section-subtitle {
+            font-size: 2.2rem;
+            margin-bottom: 40px;
+        }
+
+        a {
+            color: var(--color-text);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+            a:hover {
+                color: var(--color-accent);
+            }
+
+        /* Utilidad para animaciones de entrada */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+            .fade-in.is-visible {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+        /* --- Navigation --- */
+        #navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--color-secondary);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            padding: 15px 0;
+            transition: background-color 0.3s;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            font-weight: 800;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+            .nav-links li {
+                margin-left: 30px;
+            }
+
+        .nav-link {
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            position: relative;
+            padding-bottom: 3px;
+        }
+
+            .nav-link::after {
+                content: '';
+                position: absolute;
+                width: 0;
+                height: 2px;
+                background-color: var(--color-primary);
+                bottom: 0;
+                left: 0;
+                transition: width 0.3s ease;
+            }
+
+            .nav-link:hover::after,
+            .nav-link.active::after {
+                width: 100%;
+            }
+
+        /* Selector de Idioma */
+        .lang-switch {
+            display: flex;
+            align-items: center;
+            margin-left: 30px;
+            font-weight: 600;
+        }
+
+        .lang-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            padding: 0;
+            color: #777;
+            transition: color 0.3s;
+        }
+
+            .lang-btn:hover {
+                color: var(--color-primary);
+            }
+
+            .lang-btn[aria-pressed="true"] {
+                color: var(--color-primary);
+                font-weight: 700;
+            }
+
+        .sep {
+            margin: 0 5px;
+            color: #ccc;
+        }
+
+        /* Mobile Menu */
+        .menu-toggle {
+            display: none;
+            cursor: pointer;
+        }
+
+            .menu-toggle span {
+                display: block;
+                width: 25px;
+                height: 2px;
+                margin: 5px 0;
+                background: var(--color-text);
+                transition: 0.4s;
+            }
+
+        /* --- Hero Section --- */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            padding-top: 100px;
+            /* Espacio para el nav fijo */
+        }
+
+        .hero-content {
+            z-index: 10;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 40px;
+            font-weight: 400;
+            color: #555;
+        }
+
+        /* CTA Button */
+        .cta-button {
+            background-color: var(--color-primary);
+            color: var(--color-text-invert);
+            padding: 12px 30px;
+            border-radius: 4px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-size: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, background-color 0.3s;
+        }
+
+            .cta-button:hover {
+                transform: translateY(-2px);
+                background-color: #000;
+                color: var(--color-secondary);
+            }
+
+                .cta-button:hover svg circle {
+                    stroke: var(--color-text-invert);
+                }
+
+        /* Animated Decoration */
+        .floating-objects {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+            .floating-objects svg {
+                filter: blur(1px);
+                /* Suavizar el efecto */
+            }
+
+        /* Hero Decoration (Line) */
+        .hero-decoration {
+            width: 60%;
+            max-width: 500px;
+            margin: 40px auto 0;
+        }
+
+        /* --- About Section --- */
+        .about {
+            background-color: var(--color-secondary);
+        }
+
+        .quote-block {
+            padding: 40px 0;
+            text-align: center;
+        }
+
+            .quote-block h3 {
+                font-size: clamp(1.5rem, 3.5vw, 2.5rem);
+                font-style: italic;
+                font-weight: 600;
+                max-width: 800px;
+                margin: 0 auto;
+            }
+
+        .quote-author {
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 400;
+            font-size: 1rem;
+        }
+
+        .author-line {
+            width: 40px;
+            height: 1px;
+            background-color: var(--color-text);
+            margin-right: 15px;
+        }
+
+        .black-line {
+            padding: 40px 0;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 40px;
+            text-align: center;
+            padding: 40px 0;
+            border-top: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .stat-number {
+            font-family: var(--font-heading);
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--color-primary);
+        }
+
+        .stat-label {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        /* Philosophy */
+        .philosophy-section {
+            padding-top: 80px;
+        }
+
+        .philosophy-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+            .philosophy-header h2 {
+                margin: 0;
+                font-weight: 700;
+                font-size: 2.5rem;
+                margin-right: 30px;
+            }
+
+        .philosophy-content {
+            display: flex;
+            gap: 60px;
+            align-items: flex-start;
+        }
+
+        .philosophy-main {
+            flex: 1;
+        }
+
+        .lead-text {
+            font-size: 1.35rem;
+            font-weight: 300;
+            line-height: 1.4;
+            border-left: 3px solid var(--color-primary);
+            padding-left: 20px;
+        }
+
+        .philosophy-points {
+            flex: 1;
+            display: grid;
+            gap: 30px;
+        }
+
+        .point-item {
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+            .point-item:hover {
+                background-color: #e8e8e8;
+                border-color: #aaa;
+            }
+
+        .point-number {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--color-accent);
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .point-item h4 {
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .point-item p {
+            color: #555;
+            margin-bottom: 0;
+        }
+
+        /* Process Timeline */
+        .process-timeline {
+            padding-top: 80px;
+        }
+
+        .timeline-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-top: 40px;
+            padding-top: 30px;
+        }
+
+        .timeline-item {
+            position: relative;
+            width: 23%;
+            text-align: center;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            top: -22px;
+            transform: translateX(-50%);
+            background-color: var(--color-secondary);
+            border-radius: 50%;
+            padding: 5px;
+            z-index: 20;
+        }
+
+        .timeline-content {
+            margin-top: 20px;
+        }
+
+            .timeline-content h4 {
+                font-weight: 700;
+                font-size: 1.2rem;
+            }
+
+            .timeline-content p {
+                font-size: 0.95rem;
+                color: #555;
+            }
+
+        /* Core Values */
+        .values-section {
+            padding-top: 80px;
+        }
+
+        .values-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 60px;
+        }
+
+            .values-header h2 {
+                margin: 0 40px;
+                font-size: 2.5rem;
+            }
+
+        .black-square {
+            width: 25px;
+            height: 25px;
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+        }
+
+        .value-card {
+            border: 1px solid var(--color-primary);
+            padding: 30px;
+            text-align: center;
+            border-radius: 4px;
+            background-color: #fff;
+            transition: background-color 0.3s, transform 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .value-card:hover {
+                transform: translateY(-5px);
+                background-color: var(--color-secondary);
+            }
+
+            .value-card h4 {
+                font-size: 1.4rem;
+                font-weight: 700;
+            }
+
+        .value-icon {
+            font-size: 3rem;
+            font-family: var(--font-heading);
+            font-weight: 900;
+            line-height: 1;
+            margin-bottom: 10px;
+            color: var(--color-accent);
+        }
+
+        /* Color invertido para algunas tarjetas */
+        .value-card.black {
+            background-color: var(--color-primary);
+            color: var(--color-text-invert);
+        }
+
+            .value-card.black .value-icon {
+                color: #fff;
+            }
+
+            .value-card.black:hover {
+                background-color: #000;
+            }
+
+        /* --- Services Section --- */
+        .services-header {
+            margin-bottom: 60px;
+        }
+
+        .asymmetric-grid {
+            display: flex;
+            gap: 5%;
+            margin-bottom: 80px;
+            align-items: stretch;
+        }
+
+            .asymmetric-grid.reverse {
+                flex-direction: row-reverse;
+            }
+
+        .service-large {
+            flex: 2;
+            background-color: #fff;
+            padding: 50px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+            .service-large h3 {
+                font-size: 2rem;
+                font-weight: 800;
+                margin-bottom: 15px;
+            }
+
+            .service-large p {
+                font-size: 1.1rem;
+                color: #444;
+                margin-bottom: 30px;
+            }
+
+        .service-small {
+            flex: 1;
+            padding: 50px 30px;
+            background-color: var(--color-accent);
+            color: var(--color-text-invert);
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        .service-number {
+            font-family: var(--font-heading);
+            font-size: 4rem;
+            font-weight: 900;
+            opacity: 0.2;
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+
+        .service-tag {
+            display: inline-block;
+            background: none;
+            border: 1px solid var(--color-primary);
+            color: var(--color-primary);
+            padding: 8px 18px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-radius: 4px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+            .service-tag:hover {
+                background-color: var(--color-primary);
+                color: var(--color-text-invert);
+                border-color: var(--color-primary);
+            }
+
+        /* --- Contact Section --- */
+        .contact {
+            background-color: var(--color-primary);
+            color: var(--color-text-invert);
+        }
+
+            .contact a {
+                color: var(--color-text-invert);
+            }
+
+        .contact-grid {
+            display: flex;
+            gap: 60px;
+            align-items: flex-start;
+        }
+
+        .contact-info {
+            flex: 1.2;
+        }
+
+            .contact-info h2 {
+                font-size: 3rem;
+                margin-bottom: 40px;
+            }
+
+        .info-item {
+            margin-bottom: 30px;
+        }
+
+            .info-item h4 {
+                font-size: 1.1rem;
+                font-weight: 600;
+                color: #aaa;
+                margin-bottom: 5px;
+            }
+
+            .info-item p {
+                font-size: 1.25rem;
+                font-weight: 300;
+                margin-top: 0;
+            }
+
+        .contact-divider {
+            flex: 0 0 6px;
+            height: 200px;
+        }
+
+        .contact-form {
+            flex: 2;
+        }
+
+        /* Auth Options Styling */
+        .auth-options {
+            text-align: center;
+        }
+
+            .auth-options h3 {
+                font-size: 2rem;
+                margin-bottom: 15px;
+            }
+
+            .auth-options p {
+                font-size: 1.1rem;
+                color: #ccc;
+                margin-bottom: 30px;
+            }
+
+        .auth-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .auth-btn {
+            padding: 12px 30px;
+            border-radius: 4px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+            border: 2px solid var(--color-text-invert);
+        }
+
+        .login-btn {
+            background-color: transparent;
+            color: var(--color-text-invert);
+        }
+
+            .login-btn:hover {
+                background-color: var(--color-text-invert);
+                color: var(--color-primary);
+            }
+
+        .register-btn {
+            background-color: var(--color-text-invert);
+            color: var(--color-primary);
+        }
+
+            .register-btn:hover {
+                background-color: var(--color-accent);
+                color: var(--color-text-invert);
+                border-color: var(--color-accent);
+            }
+
+        /* --- Footer --- */
+        footer {
+            background-color: var(--color-secondary);
+            padding: 30px 40px;
+            text-align: center;
+            font-size: 0.9rem;
+            border-top: 1px solid #ddd;
+        }
+
+            footer a {
+                font-weight: 700;
+                color: var(--color-primary);
+            }
+
+        /* --- Responsiveness (Mobile First) --- */
+        @@media (max-width: 900px) {
+            .philosophy-content {
+                flex-direction: column;
+                gap: 40px;
+            }
+
+            .values-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .asymmetric-grid {
+                flex-direction: column;
+                gap: 30px;
+            }
+
+                .asymmetric-grid.reverse {
+                    flex-direction: column;
+                }
+
+            .service-large,
+            .service-small {
+                flex: none;
+                width: 100%;
+            }
+
+            .contact-grid {
+                flex-direction: column;
+                gap: 40px;
+            }
+
+            .contact-divider {
+                display: none;
+            }
+
+            .auth-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .auth-btn {
+                width: 200px;
+            }
+        }
+
+        @@media (max-width: 768px) {
+            .nav-container {
+                padding: 0 20px;
+            }
+
+            .nav-links {
+                position: absolute;
+                top: 65px;
+                left: 0;
+                width: 100%;
+                background-color: var(--color-secondary);
+                flex-direction: column;
+                align-items: center;
+                height: 0;
+                overflow: hidden;
+                transition: height 0.3s ease-in-out;
+                border-top: 1px solid rgba(0, 0, 0, 0.1);
+            }
+
+                .nav-links.open {
+                    height: 280px;
+                    /* Altura ajustada para 5 items */
+                }
+
+                .nav-links li {
+                    margin: 15px 0;
+                }
+
+            .menu-toggle {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-around;
+                height: 20px;
+            }
+
+            .timeline-container {
+                flex-wrap: wrap;
+                gap: 40px;
+            }
+
+            .timeline-item {
+                width: 45%;
+                margin: 0;
+            }
+
+            .timeline-dot {
+                display: none;
+                /* Simplificamos la animación en móvil */
+            }
+
+            .hero-decoration {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="#home" class="logo" data-i18n="brand.name">LAWDWEIA</a>
+            <div class="menu-toggle" id="menuToggle" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home" class="nav-link" data-i18n="nav.home">INICIO</a></li>
+                <li><a href="#about" class="nav-link" data-i18n="nav.about">VALORES</a></li>
+                <li><a href="#services" class="nav-link" data-i18n="nav.services">SERVICIOS</a></li>
+                <li><a href="#contact" class="nav-link" data-i18n="nav.contact">CONTACTO</a></li>
+
+                <!-- Selector EN | ES (mantengo la estructura i18n para futuras traducciones) -->
+                <li class="lang-switch" aria-label="Selector de idioma">
+                    <button type="button" class="lang-btn" data-lang="en" aria-pressed="false">EN</button>
+                    <span class="sep">|</span>
+                    <button type="button" class="lang-btn" data-lang="es" aria-pressed="true">ES</button>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Section 1: Hero -->
+    <section id="home" class="hero">
+        <!-- Animated Objects (SVG) -->
+        <div class="floating-objects" aria-hidden="true">
+            <svg width="0" height="0" style="position:absolute;opacity:0;">
+                <defs>
+                    <!-- Tono más oscuro/serio para el gradiente -->
+                    <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#1a1a1a" />
+                        <stop offset="100%" stop-color="#334155" />
+                    </linearGradient>
+                </defs>
+            </svg>
+
+            <!-- Círculo flotante y pulsante (Legal) -->
+            <svg viewBox="0 0 120 120" width="90" height="90" style="position:absolute;left:6vw;top:12vh;opacity:.15">
+                <circle cx="60" cy="60" r="40" fill="url(#g1)">
+                    <animate attributeName="opacity" values="0.15;0.35;0.15" dur="6s" repeatCount="indefinite" />
+                </circle>
+                <animateTransform attributeName="transform" type="translate" values="0 0; 5 -8; -6 10; 0 0" dur="10s"
+                                  repeatCount="indefinite" />
+            </svg>
+
+            <!-- Cuadrado rotatorio (IA/Tecnología) -->
+            <svg viewBox="0 0 200 200" width="110" height="110"
+                 style="position:absolute;right:8vw;top:18vh;opacity:.10">
+                <rect x="35" y="35" width="130" height="130" fill="url(#g1)" rx="18" />
+                <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="360 100 100" dur="24s"
+                                  repeatCount="indefinite" />
+            </svg>
+        </div>
+
+        <!-- Contenido Principal -->
+        <div class="hero-content">
+            <h1 style="position:relative;display:inline-block" data-i18n="hero.title">
+                <!-- Ícono del martillo de juez detrás -->
+                <i class="fas fa-gavel" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(2);
+                color:var(--color-primary);opacity:0.15;z-index:-1;">
+                </i>
+                La Ley Hecha Simple
+                <!-- Subrayado animado bajo el H1 -->
+                <svg viewBox="0 0 300 20" width="100%" height="16" style="position:absolute;left:0;bottom:-10px">
+                    <path d="M5 10 Q150 25 295 10" fill="none" stroke="var(--color-primary)" stroke-width="2"
+                          stroke-linecap="round" stroke-dasharray="300" stroke-dashoffset="300">
+                        <animate attributeName="stroke-dashoffset" from="300" to="0" dur="1.8s" fill="freeze" />
+                    </path>
+                </svg>
+            </h1>
+            <p class="subtitle" data-i18n="hero.subtitle">
+                Inteligencia Artificial para Claridad en Documentos Legales
+            </p>
+
+            <!-- CTA al Chat - IMPORTANTE -->
+            <a asp-controller="Auth" asp-action="Login" class="cta-button" style="position:relative;display:inline-block; margin-top: 20px;"
+               data-i18n="hero.cta">
+                ACCEDE AL ANÁLISIS IA
+                <!-- Halo pulsante -->
+                <svg viewBox="0 0 200 60" width="200" height="60"
+                     style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none">
+                    <circle cx="100" cy="30" r="22" fill="none" stroke="var(--color-text-invert)" stroke-width="1"
+                            opacity="0.3">
+                        <animate attributeName="r" values="22;30;22" dur="2.8s" repeatCount="indefinite" />
+                        <animate attributeName="opacity" values="0.3;0;0.3" dur="2.8s" repeatCount="indefinite" />
+                    </circle>
+                </svg>
+            </a>
+        </div>
+
+        <!-- Separador animado -->
+        <div class="hero-decoration" style="margin-top:80px;">
+            <svg viewBox="0 0 600 20" width="100%" height="20" preserveAspectRatio="none">
+                <line x1="0" y1="10" x2="600" y2="10" stroke="var(--color-primary)" stroke-width="1.5"
+                      stroke-dasharray="600" stroke-dashoffset="600">
+                    <animate attributeName="stroke-dashoffset" from="600" to="0" dur="1.5s" begin="0.6s"
+                             fill="freeze" />
+                </line>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Section 2: Valores -->
+    <section id="about" class="about">
+        <div class="container">
+            <!-- Cita sobre precisión -->
+            <div class="about-intro fade-in">
+                <div class="quote-block" style="position:relative">
+                    <span class="quote-mark">"</span>
+                    <h3>La precisión no es un acto, sino un hábito.</h3>
+                    <div class="quote-author">
+                        <span class="author-line"></span>
+                        <p>Aristóteles</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="black-line">
+                <!-- Línea que aparece -->
+                <svg viewBox="0 0 800 2" width="100%" height="2" preserveAspectRatio="none">
+                    <line x1="0" y1="1" x2="800" y2="1" stroke="var(--color-primary)" stroke-width="2"
+                          stroke-dasharray="800" stroke-dashoffset="800">
+                        <animate attributeName="stroke-dashoffset" from="800" to="0" dur="1.2s" fill="freeze" />
+                    </line>
+                </svg>
+            </div>
+
+            <!-- Stats (Orientados a LegalTech) -->
+            <div class="stats-grid fade-in">
+                <div class="stat-item">
+                    <div class="stat-number">99.8%</div>
+                    <div class="stat-label" data-i18n="stats.precision">Precisión de Análisis</div>
+                    <div class="stat-decoration">
+                        <svg viewBox="0 0 100 4" width="100%" height="6">
+                            <rect x="0" y="0" width="100" height="4" fill="#ddd"></rect>
+                            <rect x="0" y="0" width="99.8" height="4" fill="var(--color-primary)" width="0">
+                                <animate attributeName="width" from="0" to="99.8" dur="1.2s" fill="freeze" />
+                            </rect>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="stat-item">
+                    <div class="stat-number">10k+</div>
+                    <div class="stat-label" data-i18n="stats.documents">Documentos Procesados</div>
+                    <div class="stat-decoration">
+                        <svg viewBox="0 0 100 4" width="100%" height="6">
+                            <rect x="0" y="0" width="100" height="4" fill="#ddd"></rect>
+                            <rect x="0" y="0" width="100" height="4" fill="var(--color-primary)" width="0">
+                                <animate attributeName="width" from="0" to="100" dur="1.4s" fill="freeze" />
+                            </rect>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="stat-item">
+                    <div class="stat-number">12</div>
+                    <div class="stat-label" data-i18n="stats.languages">Idiomas Soportados</div>
+                    <div class="stat-decoration">
+                        <svg viewBox="0 0 100 4" width="100%" height="6">
+                            <rect x="0" y="0" width="100" height="4" fill="#ddd"></rect>
+                            <rect x="0" y="0" width="85" height="4" fill="var(--color-primary)" width="0">
+                                <animate attributeName="width" from="0" to="85" dur="1.1s" fill="freeze" />
+                            </rect>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="stat-item">
+                    <div class="stat-number">∞</div>
+                    <div class="stat-label" data-i18n="stats.possibilities">Potencial de Ahorro</div>
+                    <div class="stat-decoration">
+                        <svg viewBox="0 0 100 4" width="100%" height="6">
+                            <rect x="0" y="0" width="100" height="4" fill="#ddd"></rect>
+                            <rect x="0" y="0" width="100" height="4" fill="var(--color-primary)">
+                                <animate attributeName="opacity" values="0;1;0.5;1" dur="2s" repeatCount="indefinite" />
+                            </rect>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filosofía (Propuesta de Valor) -->
+            <div class="philosophy-section fade-in">
+                <div class="philosophy-header">
+                    <h2 data-i18n="about.title">Nuestra Misión</h2>
+                    <div class="header-decoration">
+                        <svg viewBox="0 0 200 6" width="160" height="6">
+                            <rect x="0" y="2" width="200" height="2" fill="var(--color-primary)" opacity="0.15">
+                                <animate attributeName="x" values="-200;0;-200" dur="6s" repeatCount="indefinite" />
+                            </rect>
+                        </svg>
+                    </div>
+                </div>
+                <div class="philosophy-content">
+                    <div class="philosophy-main">
+                        <p class="lead-text" data-i18n="about.lead">
+                            Simplificamos la jerga legal compleja en segundos: obtenga <b>resúmenes precisos</b>,
+                            <b>cláusulas clave resaltadas</b> y un <b>análisis de riesgos inmediato</b> sin leer el
+                            documento
+                            completo.
+                        </p>
+                    </div>
+                    <div class="philosophy-points">
+                        <div class="point-item">
+                            <span class="point-number">01</span>
+                            <h4 data-i18n="about.c1.h">Claridad Inmediata</h4>
+                            <p data-i18n="about.c1.p">Convertimos la complejidad legal en lenguaje natural.</p>
+                        </div>
+                        <div class="point-item">
+                            <span class="point-number">02</span>
+                            <h4 data-i18n="about.c2.h">Análisis Profundo</h4>
+                            <p data-i18n="about.c2.p">Descubrimos riesgos y obligaciones ocultas.</p>
+                        </div>
+                        <div class="point-item">
+                            <span class="point-number">03</span>
+                            <h4 data-i18n="about.c3.h">Confidencialidad</h4>
+                            <p data-i18n="about.c3.p">
+                                Protección de datos con protocolos de seguridad de nivel legal.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Proceso de Análisis (en lugar de Proceso de Diseño) -->
+            <div class="process-timeline fade-in">
+                <h2 class="section-subtitle" data-i18n="process.title">Nuestro Flujo de Análisis</h2>
+                <div class="timeline-container" style="position:relative">
+                    <!-- Línea central -->
+                    <svg viewBox="0 0 800 4" width="100%" height="8" style="position:absolute;left:0;top:32px">
+                        <line x1="0" y1="2" x2="800" y2="2" stroke="var(--color-primary)" stroke-width="2"
+                              stroke-dasharray="800" stroke-dashoffset="800">
+                            <animate attributeName="stroke-dashoffset" from="800" to="0" dur="1.6s" fill="freeze" />
+                        </line>
+                    </svg>
+
+                    <!-- Items -->
+                    <div class="timeline-item">
+                        <div class="timeline-dot">
+                            <svg viewBox="0 0 20 20" width="16" height="16">
+                                <circle cx="10" cy="10" r="0" fill="var(--color-primary)">
+                                    <animate attributeName="r" from="0" to="6" dur="0.4s" fill="freeze" />
+                                </circle>
+                            </svg>
+                        </div>
+                        <div class="timeline-content">
+                            <h4 data-i18n="process.discover.h">Carga</h4>
+                            <p data-i18n="process.discover.p">Sube tu documento de forma segura.</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-dot">
+                            <svg viewBox="0 0 20 20" width="16" height="16">
+                                <circle cx="10" cy="10" r="0" fill="var(--color-primary)">
+                                    <animate attributeName="r" from="0" to="6" dur="0.4s" begin="0.2s" fill="freeze" />
+                                </circle>
+                            </svg>
+                        </div>
+                        <div class="timeline-content">
+                            <h4 data-i18n="process.reduce.h">Proceso IA</h4>
+                            <p data-i18n="process.reduce.p">La IA segmenta y analiza la jerga legal.</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-dot">
+                            <svg viewBox="0 0 20 20" width="16" height="16">
+                                <circle cx="10" cy="10" r="0" fill="var(--color-primary)">
+                                    <animate attributeName="r" from="0" to="6" dur="0.4s" begin="0.4s" fill="freeze" />
+                                </circle>
+                            </svg>
+                        </div>
+                        <div class="timeline-content">
+                            <h4 data-i18n="process.refine.h">Resumen</h4>
+                            <p data-i18n="process.refine.p">Generación de síntesis y puntos clave.</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-dot">
+                            <svg viewBox="0 0 20 20" width="16" height="16">
+                                <circle cx="10" cy="10" r="0" fill="var(--color-primary)">
+                                    <animate attributeName="r" from="0" to="6" dur="0.4s" begin="0.6s" fill="freeze" />
+                                </circle>
+                            </svg>
+                        </div>
+                        <div class="timeline-content">
+                            <h4 data-i18n="process.deliver.h">Consulta</h4>
+                            <p data-i18n="process.deliver.p">Interactúa con el chat sobre el documento.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Section 3: Servicios -->
+    <section id="services" class="services">
+        <div class="container">
+            <div class="services-header fade-in">
+                <h2 data-i18n="services.title">Nuestros Servicios de IA</h2>
+            </div>
+
+            <div class="asymmetric-grid fade-in">
+                <div class="service-large">
+                    <h3 data-i18n="services.contract.h">Análisis Profundo de Contratos</h3>
+                    <p data-i18n="services.contract.p">
+                        Detectamos y simplificamos todas las cláusulas complejas. Compara
+                        versiones, identifica inconsistencias y recibe una puntuación de riesgo detallada en segundos.
+                    </p>
+                    <a asp-controller="Auth" asp-action="Login" class="service-tag" style="position:relative;display:inline-block"
+                       data-i18n="services.contract.cta">
+                        Empieza Ahora
+                        <svg viewBox="0 0 120 36" width="120" height="36"
+                             style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none">
+                            <rect x="10" y="10" width="100" height="16" fill="none" stroke="var(--color-primary)"
+                                  stroke-width="1" stroke-dasharray="232" stroke-dashoffset="232">
+                                <animate attributeName="stroke-dashoffset" from="232" to="0" dur="1.2s" fill="freeze" />
+                            </rect>
+                        </svg>
+                    </a>
+                </div>
+                <div class="service-small">
+                    <!-- Imagen relacionada con la misión -->
+                    <div class="philosophy-image">
+                        <img src="~/images/flujo.jpeg" alt="Imagen representativa de la misión"
+                             style="width:30rem;display:block;border-radius:12px;">
+                    </div>
+                </div>
+            </div>
+
+            <div class="asymmetric-grid reverse fade-in">
+                <div class="service-small">
+                    <!-- Imagen relacionada con la misión -->
+                    <div class="philosophy-image">
+                        <img src="~/images/troca.jpeg" alt="Imagen representativa de la misión"
+                             style="width:30rem;display:block;border-radius:12px;">
+                    </div>
+                </div>
+                <div class="service-large">
+                    <h3 data-i18n="services.clause.h">Extracción de Cláusulas Clave</h3>
+                    <p data-i18n="services.clause.p">
+                        Extrae automáticamente términos críticos como plazos,
+                        indemnizaciones y jurisdicción de cualquier documento, organizándolos en una tabla concisa.
+                    </p>
+                    <a asp-controller="Auth" asp-action="Login" class="service-tag" data-i18n="services.clause.cta">Solicitar Demo</a>
+                </div>
+            </div>
+
+            <div class="asymmetric-grid fade-in">
+                <div class="service-large">
+                    <h3 data-i18n="services.risk.h">Evaluación y Mitigación de Riesgos</h3>
+                    <p data-i18n="services.risk.p">
+                        Recibe una puntuación de riesgo inmediata. Identificamos cláusulas
+                        problemáticas o faltantes, sugiriendo textos alternativos basados en las mejores prácticas
+                        legales.
+                    </p>
+                    <a asp-controller="Auth" asp-action="Login" class="service-tag" data-i18n="services.risk.cta">Contáctanos</a>
+                </div>
+                <div class="service-small">
+                    <!-- Imagen relacionada con la misión -->
+                    <div class="philosophy-image">
+                        <img src="~/images/trabajo1.jpg" alt="Imagen representativa de la misión"
+                             style="width:30rem;display:block;border-radius:12px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 4: Contact -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="contact-grid fade-in">
+                <div class="contact-info">
+                    <h2 data-i18n="contact.title">Contáctanos</h2>
+                    <div class="info-item">
+                        <h4 data-i18n="contact.email">Correo Electrónico</h4>
+                        <p>legaltech@lawdweia.com</p>
+                    </div>
+                    <div class="info-item">
+                        <h4 data-i18n="contact.phone">Teléfono</h4>
+                        <p>+52 55 1234 5678</p>
+                    </div>
+                    <div class="info-item">
+                        <h4 data-i18n="contact.location">Ubicación</h4>
+                        <p>Ciudad de México, MX</p>
+                    </div>
+                </div>
+
+                <div class="contact-divider">
+                    <!-- Línea viva -->
+                    <svg viewBox="0 0 6 200" width="6" height="200" preserveAspectRatio="none">
+                        <line x1="3" y1="0" x2="3" y2="200" stroke="var(--color-text-invert)" stroke-width="1.5"
+                              stroke-dasharray="200" stroke-dashoffset="200">
+                            <animate attributeName="stroke-dashoffset" from="200" to="0" dur="1.4s" fill="freeze" />
+                        </line>
+                    </svg>
+                </div>
+
+                <div class="contact-form">
+                    <div class="auth-options">
+                        <h3>¿Listo para comenzar?</h3>
+                        <p>Únete a profesionales legales usando IA</p>
+                        <div class="auth-buttons">
+                            <a asp-controller="Auth" asp-action="Login" class="auth-btn login-btn" data-i18n="auth.login">
+                                Iniciar Sesión
+                            </a>
+                            <a asp-controller="Auth" asp-action="Register" class="auth-btn register-btn" data-i18n="auth.register">
+                                Crear Cuenta
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>
+            <span data-i18n="footer.copy">© 2025 LadweIA - La Ley Simple. Diseño adaptado de</span>
+            <a href="https://www.tooplate.com" target="_blank" rel="nofollow noopener">Tooplate</a>
+        </p>
+    </footer>
+
+    <!-- LÓGICA JAVASCRIPT INLINE -->
+    <script>
+        // 1. Navbar Toggle para móvil
+        document.getElementById('menuToggle').addEventListener('click', function () {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('open');
+            this.classList.toggle('open');
+        });
+
+        // 2. Observer para animaciones fade-in al scrollear
+        const fadeInElements = document.querySelectorAll('.fade-in');
+
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                }
+            });
+        }, observerOptions);
+
+        fadeInElements.forEach(element => {
+            observer.observe(element);
+        });
+
+        // 3. Lógica de Navegación (Scroll suave y cierre de menú)
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+                // Cierra el menú en móvil después de hacer click
+                const navLinks = document.getElementById('navLinks');
+                if (navLinks.classList.contains('open')) {
+                    navLinks.classList.remove('open');
+                    document.getElementById('menuToggle').classList.remove('open');
+                }
+            });
+        });
+
+        // 4. Lógica de i18n mínima (Solo cambia la bandera activa en el botón)
+        document.querySelectorAll('.lang-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                document.querySelectorAll('.lang-btn').forEach(btn => {
+                    btn.setAttribute('aria-pressed', 'false');
+                });
+                this.setAttribute('aria-pressed', 'true');
+            });
+        });
+    </script>
+</body>
+
+</html>

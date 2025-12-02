@@ -1,0 +1,1399 @@
+﻿@{
+    ViewData["Title"] = "Panel de Administración - Documentos Públicos";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #4cc9f0;
+            --primary-dark: #3a9fc7;
+            --success-color: #4ade80;
+            --danger-color: #f87171;
+            --warning-color: #fbbf24;
+            --info-color: #60a5fa;
+            --dark-bg: #0f172a;
+            --darker-bg: #0a0f1c;
+            --card-bg: #1e293b;
+            --card-border: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border-color: #475569;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-primary);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
+        }
+
+        /* Scrollbar personalizado */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--darker-bg);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+
+        .admin-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header mejorado */
+        .admin-header {
+            background: linear-gradient(135deg, var(--darker-bg) 0%, #1a1f36 100%);
+            border-bottom: 1px solid var(--card-border);
+            padding: 1.5rem 0;
+            margin-bottom: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .admin-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary-color), var(--info-color));
+        }
+
+        .brand-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .brand-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-color), var(--info-color));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark-bg);
+            font-size: 1.5rem;
+            box-shadow: 0 4px 12px rgba(76, 201, 240, 0.3);
+        }
+
+        .brand-text h1 {
+            font-weight: 700;
+            font-size: 1.8rem;
+            background: linear-gradient(90deg, var(--text-primary), var(--text-secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin: 0;
+        }
+
+        .brand-text p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin: 0;
+            letter-spacing: 0.5px;
+        }
+
+        /* Botón de cerrar sesión */
+        .logout-btn {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            border: none;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+        }
+
+        .logout-btn:hover {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(239, 68, 68, 0.3);
+        }
+
+        /* Tarjetas de estadísticas */
+        .stat-card {
+            background: linear-gradient(145deg, var(--card-bg), #1a2238);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 1.75rem;
+            transition: all 0.3s ease;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), transparent);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+            border-color: var(--primary-color);
+        }
+
+        .stat-icon {
+            font-size: 2.8rem;
+            margin-bottom: 1.25rem;
+            opacity: 0.9;
+            display: inline-block;
+            padding: 15px;
+            border-radius: 12px;
+            background: rgba(76, 201, 240, 0.1);
+            color: var(--primary-color);
+        }
+
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, var(--text-primary), var(--text-secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 600;
+        }
+
+        /* Cards principales */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-header {
+            background: rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid var(--card-border);
+            padding: 1.25rem 1.75rem;
+            border-radius: 14px 14px 0 0 !important;
+        }
+
+        .card-title {
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title i {
+            color: var(--primary-color);
+        }
+
+        /* Tablas */
+        .table-dark {
+            --bs-table-bg: transparent;
+            --bs-table-striped-bg: rgba(255, 255, 255, 0.03);
+            --bs-table-hover-bg: rgba(255, 255, 255, 0.05);
+            border-color: var(--border-color);
+        }
+
+        .table-responsive {
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--card-border);
+        }
+
+        .dataTables_wrapper {
+            padding: 0;
+        }
+
+        /* Botones */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            border: none;
+            padding: 0.75rem 1.75rem;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(76, 201, 240, 0.2);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--primary-dark), #2a7fa3);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(76, 201, 240, 0.3);
+        }
+
+        .btn-outline-secondary {
+            border-color: var(--border-color);
+            color: var(--text-secondary);
+            border-radius: 8px;
+        }
+
+        .btn-outline-secondary:hover {
+            background: var(--border-color);
+            border-color: var(--text-muted);
+            color: var(--text-primary);
+        }
+
+        .btn-outline-secondary.active {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            color: var(--dark-bg);
+        }
+
+        /* Badges */
+        .badge {
+            font-weight: 600;
+            padding: 0.5em 1em;
+            border-radius: 8px;
+            font-size: 0.8rem;
+        }
+
+        .bg-success {
+            background: linear-gradient(135deg, var(--success-color), #16a34a) !important;
+        }
+
+        .bg-warning {
+            background: linear-gradient(135deg, var(--warning-color), #d97706) !important;
+            color: #000 !important;
+        }
+
+        .bg-info {
+            background: linear-gradient(135deg, var(--info-color), #2563eb) !important;
+        }
+
+        .bg-danger {
+            background: linear-gradient(135deg, var(--danger-color), #dc2626) !important;
+        }
+
+        /* Filas de documentos */
+        .document-row {
+            transition: all 0.2s ease;
+        }
+
+        .document-row:hover {
+            background: linear-gradient(90deg, rgba(76, 201, 240, 0.05), transparent);
+        }
+
+        /* Modales */
+        .modal-content {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-header {
+            border-bottom: 1px solid var(--card-border);
+            padding: 1.5rem;
+        }
+
+        .modal-footer {
+            border-top: 1px solid var(--card-border);
+            padding: 1.25rem 1.5rem;
+        }
+
+        .btn-close-white {
+            filter: invert(1) grayscale(100%) brightness(200%);
+        }
+
+        /* Formularios */
+        .form-control, .form-select {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            background-color: rgba(255, 255, 255, 0.08);
+            border-color: var(--primary-color);
+            color: var(--text-primary);
+            box-shadow: 0 0 0 3px rgba(76, 201, 240, 0.15);
+        }
+
+        /* Área de upload */
+        .upload-area {
+            border: 2px dashed var(--border-color);
+            border-radius: 14px;
+            padding: 3rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            background: rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+        }
+
+        .upload-area:hover, .upload-area.dragover {
+            border-color: var(--primary-color);
+            background: rgba(76, 201, 240, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .upload-icon {
+            font-size: 4.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            opacity: 0.8;
+        }
+
+        /* Progress bar */
+        .progress {
+            height: 10px;
+            background-color: rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, var(--primary-color), var(--success-color));
+            transition: width 0.4s ease;
+            border-radius: 8px;
+        }
+
+        /* Spinner */
+        .loading-spinner {
+            display: inline-block;
+            width: 1.25rem;
+            height: 1.25rem;
+            border: 2px solid currentColor;
+            border-right-color: transparent;
+            border-radius: 50%;
+            animation: spinner 0.75s linear infinite;
+        }
+
+        @@keyframes spinner {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Alertas */
+        .alert {
+            border: none;
+            border-radius: 12px;
+            padding: 1.25rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .alert-success {
+            background: rgba(74, 222, 128, 0.15);
+            border-left: 4px solid var(--success-color);
+            color: var(--text-primary);
+        }
+
+        .alert-danger {
+            background: rgba(248, 113, 113, 0.15);
+            border-left: 4px solid var(--danger-color);
+            color: var(--text-primary);
+        }
+
+        .alert-info {
+            background: rgba(96, 165, 250, 0.15);
+            border-left: 4px solid var(--info-color);
+            color: var(--text-primary);
+        }
+
+        /* Document details */
+        .document-details {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 1.75rem;
+            margin-top: 1rem;
+            border: 1px solid var(--card-border);
+        }
+
+        .document-details dt {
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 1rem;
+        }
+
+        .document-details dd {
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            margin-left: 0;
+        }
+
+        /* Navegación por tabs */
+        .nav-tabs {
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .nav-tabs .nav-link {
+            color: var(--text-muted);
+            border: 1px solid transparent;
+            border-radius: 10px 10px 0 0;
+            padding: 0.75rem 1.5rem;
+            margin-bottom: -1px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-tabs .nav-link.active {
+            color: var(--primary-color);
+            background-color: transparent;
+            border-color: var(--card-border) var(--card-border) var(--card-bg);
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .nav-tabs .nav-link:hover:not(.active) {
+            color: var(--text-primary);
+            border-color: var(--border-color);
+        }
+
+        /* Footer */
+        .admin-footer {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--card-border);
+            text-align: center;
+        }
+
+        .admin-footer p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .admin-footer small {
+            color: var(--text-muted);
+            opacity: 0.7;
+        }
+
+        /* Responsive */
+        @@media (max-width: 992px) {
+            .admin-container {
+                padding: 15px;
+            }
+            
+            .stat-card {
+                padding: 1.25rem;
+            }
+            
+            .stat-value {
+                font-size: 1.8rem;
+            }
+            
+            .stat-icon {
+                font-size: 2.2rem;
+                padding: 12px;
+            }
+        }
+
+        @@media (max-width: 768px) {
+            .admin-header {
+                padding: 1rem 0;
+            }
+            
+            .brand-text h1 {
+                font-size: 1.5rem;
+            }
+            
+            .upload-area {
+                padding: 2rem;
+            }
+            
+            .btn-group {
+                flex-wrap: wrap;
+            }
+        }
+
+        @@media (max-width: 576px) {
+            .admin-container {
+                padding: 10px;
+            }
+            
+            .stat-card {
+                padding: 1rem;
+            }
+            
+            .stat-value {
+                font-size: 1.6rem;
+            }
+        }
+
+        /* Animaciones sutiles */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @@keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Efecto de brillo en hover */
+        .glow-on-hover {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glow-on-hover::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .glow-on-hover:hover::after {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container fade-in">
+        <!-- Header mejorado -->
+        <div class="admin-header">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <div class="brand-section">
+                        <div class="brand-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="brand-text">
+                            <h1>Panel de Administración</h1>
+                            <p>Base de Conocimiento Global • Gestión Centralizada</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="d-flex justify-content-end align-items-center gap-3">
+                        <button class="btn btn-primary" onclick="showUploadModal()">
+                            <i class="fas fa-cloud-upload-alt me-2"></i>Subir Documento
+                        </button>
+                        <button class="logout-btn" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i>Cerrar Sesión
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="row mb-4" id="stats-container">
+            <div class="col-md-3 mb-3">
+                <div class="stat-card glow-on-hover">
+                    <div class="stat-icon">
+                        <i class="fas fa-folder-open"></i>
+                    </div>
+                    <div class="stat-value" id="total-documents">0</div>
+                    <div class="stat-label">Documentos Totales</div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="stat-card glow-on-hover">
+                    <div class="stat-icon">
+                        <i class="fas fa-puzzle-piece"></i>
+                    </div>
+                    <div class="stat-value" id="total-chunks">0</div>
+                    <div class="stat-label">Fragmentos (Chunks)</div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="stat-card glow-on-hover">
+                    <div class="stat-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <div class="stat-value" id="total-size">0 MB</div>
+                    <div class="stat-label">Espacio Utilizado</div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="stat-card glow-on-hover">
+                    <div class="stat-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="stat-value" id="avg-chunks">0</div>
+                    <div class="stat-label">Prom. Chunks/Doc</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title">
+                            <i class="fas fa-file-alt"></i>
+                            Documentos Públicos
+                        </h5>
+                        <div class="d-flex align-items-center gap-2">
+                            <button class="btn btn-outline-secondary btn-sm" onclick="refreshDocuments()" title="Actualizar">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-outline-secondary btn-sm active" data-filter="all">Todos</button>
+                                <button type="button" class="btn btn-outline-secondary btn-sm" data-filter="active">Activos</button>
+                                <button type="button" class="btn btn-outline-secondary btn-sm" data-filter="processing">Procesando</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="documents-table" class="table table-dark table-hover" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th><i class="fas fa-heading me-2"></i>Título</th>
+                                        <th><i class="fas fa-file me-2"></i>Archivo</th>
+                                        <th><i class="fas fa-file-code me-2"></i>Tipo</th>
+                                        <th><i class="fas fa-weight-hanging me-2"></i>Tamaño</th>
+                                        <th><i class="fas fa-layer-group me-2"></i>Chunks</th>
+                                        <th><i class="fas fa-user me-2"></i>Subido por</th>
+                                        <th><i class="fas fa-calendar me-2"></i>Fecha</th>
+                                        <th><i class="fas fa-circle me-2"></i>Estado</th>
+                                        <th><i class="fas fa-cog me-2"></i>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Los documentos se cargarán aquí -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Documents -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">
+                            <i class="fas fa-history"></i>
+                            Documentos Recientes
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row" id="recent-documents">
+                            <!-- Los documentos recientes se cargarán aquí -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="admin-footer">
+            <p>© @DateTime.Now.Year - LawdeIA Admin Panel v1.0</p>
+            <small>Base de Conocimiento Global • Sistema de gestión documental</small>
+        </div>
+    </div>
+
+    <!-- Upload Modal -->
+    <div class="modal fade" id="uploadModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-cloud-upload-alt me-2"></i>
+                        Subir Documento
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Este documento será público y estará disponible para todos los usuarios como parte de la base de conocimiento global.
+                    </div>
+                    
+                    <div class="upload-area" id="drop-area">
+                        <div class="upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <h5 class="mb-3">Arrastra y suelta tu archivo aquí</h5>
+                        <p class="text-muted mb-4">o haz clic para seleccionar</p>
+                        <input type="file" id="fileInput" class="d-none" accept=".pdf,.txt,.md,.doc,.docx">
+                        <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">
+                            <i class="fas fa-folder-open me-2"></i>Explorar Archivos
+                        </button>
+                        <p class="text-muted mt-3 mb-0">
+                            <i class="fas fa-file-pdf me-1"></i>PDF • 
+                            <i class="fas fa-file-alt me-1 ms-2"></i>TXT • 
+                            <i class="fas fa-file-code me-1 ms-2"></i>MD • 
+                            <i class="fas fa-file-word me-1 ms-2"></i>DOC/DOCX
+                        </p>
+                        <p class="text-muted mt-1"><small>Límite: 100MB por archivo</small></p>
+                    </div>
+
+                    <div id="file-preview" class="d-none">
+                        <div class="alert alert-success mt-4">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-file-alt fs-4 me-3"></i>
+                                    <div>
+                                        <strong id="file-name"></strong>
+                                        <div class="text-muted" id="file-size"></div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-outline-danger btn-sm" onclick="clearFile()">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <label for="documentTitle" class="form-label">
+                            <i class="fas fa-heading me-2"></i>Título del Documento
+                        </label>
+                        <input type="text" class="form-control" id="documentTitle" 
+                               placeholder="Ingresa un título descriptivo para el documento">
+                    </div>
+
+                    <div class="progress mt-4 d-none" id="upload-progress">
+                        <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                    </div>
+
+                    <div id="upload-status" class="mt-4"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="upload-btn" onclick="uploadDocument()" disabled>
+                        <i class="fas fa-upload me-2"></i>Subir a la Base de Conocimiento
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Document Details Modal -->
+    <div class="modal fade" id="detailsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Detalles del Documento
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="document-details">
+                    <!-- Los detalles se cargarán aquí -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>Cerrar
+                    </button>
+                    <button type="button" class="btn btn-danger" id="delete-btn" onclick="confirmDelete()">
+                        <i class="fas fa-trash me-2"></i>Eliminar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-danger">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Confirmar Eliminación
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>¿Estás seguro de que deseas eliminar este documento de la base de conocimiento?</p>
+                    <div class="alert alert-danger">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Advertencia:</strong> Esta acción no se puede deshacer. El documento será eliminado permanentemente.
+                    </div>
+                    <p id="delete-document-info" class="mb-0"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirm-delete-btn">
+                        <i class="fas fa-trash me-2"></i>Eliminar Permanentemente
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <!-- DataTables -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+    <script>
+        let currentDocumentId = null;
+        let documentsTable = null;
+
+        $(document).ready(function() {
+            loadStatistics();
+            loadDocuments();
+            setupDragAndDrop();
+        });
+
+        function loadStatistics() {
+            $.get('/Admin/GetDocumentStatistics', function(data) {
+                $('#total-documents').text(data.totalDocuments);
+                $('#total-chunks').text(data.totalChunks);
+                $('#total-size').text(formatFileSize(data.totalSize));
+                $('#avg-chunks').text(data.averageChunksPerDocument.toFixed(1));
+
+                displayRecentDocuments(data.recentDocuments);
+            }).fail(function() {
+                showAlert('Error al cargar estadísticas', 'danger');
+            });
+        }
+
+        function loadDocuments() {
+            $.get('/Admin/GetPublicDocuments', function(documents) {
+                if (documentsTable) {
+                    documentsTable.destroy();
+                }
+
+                documentsTable = $('#documents-table').DataTable({
+                    data: documents,
+                    columns: [
+                        {
+                            data: 'title',
+                            render: function(data, type, row) {
+                                return `<strong class="text-primary">${data}</strong>`;
+                            }
+                        },
+                        {
+                            data: 'fileName',
+                            render: function(data) {
+                                return `<span class="text-muted"><i class="fas fa-file me-2"></i>${data}</span>`;
+                            }
+                        },
+                        {
+                            data: 'fileType',
+                            render: function(data) {
+                                const icon = getFileTypeIcon(data);
+                                return `${icon} <span class="text-uppercase">${data}</span>`;
+                            }
+                        },
+                        {
+                            data: 'fileSize',
+                            render: function(data) {
+                                return `<span class="fw-semibold">${formatFileSize(data)}</span>`;
+                            }
+                        },
+                        {
+                            data: 'chunkCount',
+                            render: function(data) {
+                                return `<span class="badge bg-info">${data}</span>`;
+                            }
+                        },
+                        {
+                            data: 'uploader',
+                            render: function(data) {
+                                return `<span class="text-muted"><i class="fas fa-user me-2"></i>${data}</span>`;
+                            }
+                        },
+                        {
+                            data: 'createdAt',
+                            render: function(data) {
+                                return `<small class="text-muted">${data}</small>`;
+                            }
+                        },
+                        {
+                            data: 'processingStatus',
+                            render: function(data, type, row) {
+                                return getStatusBadge(data);
+                            }
+                        },
+                        {
+                            data: 'id',
+                            render: function(data, type, row) {
+                                return `
+                                    <div class="btn-group btn-group-sm">
+                                        <button class="btn btn-outline-info" onclick="viewDocumentDetails(${data})" title="Ver detalles">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn btn-outline-danger" onclick="showDeleteConfirmation(${data}, '${row.title.replace(/'/g, "\\'")}')" title="Eliminar">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                `;
+                            },
+                            orderable: false
+                        }
+                    ],
+                    pageLength: 10,
+                    language: {
+                        url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
+                    },
+                    order: [[6, 'desc']],
+                    drawCallback: function() {
+                        $('[data-bs-toggle="tooltip"]').tooltip();
+                    }
+                });
+
+                // Filtrar por estado
+                $('[data-filter]').on('click', function() {
+                    const filter = $(this).data('filter');
+                    $('[data-filter]').removeClass('active');
+                    $(this).addClass('active');
+                    
+                    if (filter === 'all') {
+                        documentsTable.search('').columns().search('').draw();
+                    } else {
+                        documentsTable.column(7).search(filter === 'active' ? 'Completado' : 'Procesando').draw();
+                    }
+                });
+            }).fail(function() {
+                showAlert('Error al cargar documentos', 'danger');
+            });
+        }
+
+        function displayRecentDocuments(documents) {
+            const container = $('#recent-documents');
+            container.empty();
+            
+            if (!documents || documents.length === 0) {
+                container.html('<p class="text-muted text-center py-4">No hay documentos recientes</p>');
+                return;
+            }
+            
+            documents.forEach(doc => {
+                const col = `
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100 document-row glow-on-hover" onclick="viewDocumentDetails(${doc.id})" style="cursor: pointer;">
+                            <div class="card-body">
+                                <h6 class="card-title text-truncate">${doc.title}</h6>
+                                <div class="d-flex justify-content-between align-items-center mt-3">
+                                    <small class="text-muted"><i class="fas fa-calendar me-1"></i>${doc.createdAt}</small>
+                                    <span class="badge bg-info">${doc.chunkCount} chunks</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.append(col);
+            });
+        }
+
+        function showUploadModal() {
+            clearFile();
+            $('#documentTitle').val('');
+            $('#upload-progress').addClass('d-none');
+            $('#upload-status').empty();
+            $('#upload-btn').prop('disabled', true);
+            
+            const modal = new bootstrap.Modal(document.getElementById('uploadModal'));
+            modal.show();
+        }
+
+        function setupDragAndDrop() {
+            const dropArea = document.getElementById('drop-area');
+            const fileInput = document.getElementById('fileInput');
+
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, preventDefaults, false);
+            });
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropArea.addEventListener(eventName, highlight, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, unhighlight, false);
+            });
+
+            function highlight() {
+                dropArea.classList.add('dragover');
+            }
+
+            function unhighlight() {
+                dropArea.classList.remove('dragover');
+            }
+
+            dropArea.addEventListener('drop', handleDrop, false);
+            fileInput.addEventListener('change', handleFileSelect, false);
+
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                handleFiles(files);
+            }
+
+            function handleFileSelect() {
+                const files = this.files;
+                handleFiles(files);
+            }
+
+            function handleFiles(files) {
+                if (files.length === 0) return;
+                const file = files[0];
+                updateFilePreview(file);
+            }
+        }
+
+        function updateFilePreview(file) {
+            if (!validateFile(file)) return;
+
+            const fileName = file.name;
+            const fileSize = formatFileSize(file.size);
+            
+            $('#file-name').text(fileName);
+            $('#file-size').text(fileSize);
+            $('#file-preview').removeClass('d-none');
+            $('#documentTitle').val(fileName.substring(0, fileName.lastIndexOf('.')));
+            $('#upload-btn').prop('disabled', false);
+        }
+
+        function validateFile(file) {
+            const maxSize = 100 * 1024 * 1024;
+            const allowedTypes = ['.pdf', '.txt', '.md', '.doc', '.docx'];
+            const extension = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
+            
+            if (!allowedTypes.includes(extension)) {
+                showAlert('Tipo de archivo no permitido. Formatos aceptados: PDF, TXT, MD, DOC, DOCX', 'danger');
+                return false;
+            }
+            
+            if (file.size > maxSize) {
+                showAlert('El archivo es demasiado grande. Máximo 100MB', 'danger');
+                return false;
+            }
+            
+            return true;
+        }
+
+        function clearFile() {
+            $('#fileInput').val('');
+            $('#file-preview').addClass('d-none');
+            $('#upload-btn').prop('disabled', true);
+        }
+
+        function uploadDocument() {
+            const fileInput = document.getElementById('fileInput');
+            const titleInput = document.getElementById('documentTitle');
+            
+            if (fileInput.files.length === 0) {
+                showAlert('Por favor, selecciona un archivo', 'danger');
+                return;
+            }
+            
+            const file = fileInput.files[0];
+            const title = titleInput.value.trim() || file.name.substring(0, file.name.lastIndexOf('.'));
+            
+            const formData = new FormData();
+            formData.append('file', file);
+            
+            $('#upload-btn').prop('disabled', true).html('<span class="loading-spinner"></span> Procesando...');
+            $('#upload-progress').removeClass('d-none');
+            
+            $.ajax({
+                url: '/Admin/UploadDocument',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                xhr: function() {
+                    const xhr = new window.XMLHttpRequest();
+                    xhr.upload.addEventListener('progress', function(e) {
+                        if (e.lengthComputable) {
+                            const percentComplete = Math.round((e.loaded / e.total) * 100);
+                            $('.progress-bar').css('width', percentComplete + '%');
+                        }
+                    });
+                    return xhr;
+                },
+                success: function(response) {
+                    if (response.success) {
+                        showAlert('Documento subido exitosamente. Procesando embeddings...', 'success');
+                        
+                        setTimeout(() => {
+                            loadStatistics();
+                            loadDocuments();
+                            
+                            const modal = bootstrap.Modal.getInstance(document.getElementById('uploadModal'));
+                            modal.hide();
+                            
+                            showAlert('Documento procesado y añadido a la base de conocimiento global', 'success');
+                        }, 2000);
+                    } else {
+                        showAlert('Error: ' + response.error, 'danger');
+                        $('#upload-btn').prop('disabled', false).html('<i class="fas fa-upload me-2"></i>Subir Documento');
+                    }
+                },
+                error: function(xhr) {
+                    let errorMsg = 'Error en la subida';
+                    try {
+                        const response = JSON.parse(xhr.responseText);
+                        errorMsg = response.error || errorMsg;
+                    } catch (e) {}
+                    showAlert(errorMsg, 'danger');
+                    $('#upload-btn').prop('disabled', false).html('<i class="fas fa-upload me-2"></i>Subir Documento');
+                }
+            });
+        }
+
+        function viewDocumentDetails(documentId) {
+            $.get(`/Admin/GetDocumentInfo?documentId=${documentId}`, function(response) {
+                if (response.success) {
+                    const doc = response.document;
+                    currentDocumentId = doc.id;
+                    
+                    const html = `
+                        <div class="row">
+                            <div class="col-md-6">
+                                <dl class="document-details">
+                                    <dt>Título:</dt>
+                                    <dd><i class="fas fa-heading me-2"></i>${doc.title}</dd>
+                                    
+                                    <dt>Archivo:</dt>
+                                    <dd><i class="fas fa-file me-2"></i>${doc.fileName} <span class="text-muted">(${formatFileSize(doc.fileSize)})</span></dd>
+                                    
+                                    <dt>Tipo:</dt>
+                                    <dd>${getFileTypeIcon(doc.fileType)} ${doc.fileType.toUpperCase()}</dd>
+                                    
+                                    <dt>Subido por:</dt>
+                                    <dd><i class="fas fa-user me-2"></i>${doc.uploader}</dd>
+                                    
+                                    <dt>Fecha de creación:</dt>
+                                    <dd><i class="fas fa-calendar me-2"></i>${doc.createdAt}</dd>
+                                </dl>
+                            </div>
+                            <div class="col-md-6">
+                                <dl class="document-details">
+                                    <dt>Estado:</dt>
+                                    <dd>${getStatusBadge(doc.processingStatus)}</dd>
+                                    
+                                    <dt>Fragmentos (Chunks):</dt>
+                                    <dd><i class="fas fa-layer-group me-2"></i><span class="badge bg-info">${doc.chunkCount}</span></dd>
+                                    
+                                    <dt>Longitud del contenido:</dt>
+                                    <dd><i class="fas fa-ruler me-2"></i>${doc.contentLength.toLocaleString()} caracteres</dd>
+                                    
+                                    <dt>Modelo de embeddings:</dt>
+                                    <dd><i class="fas fa-brain me-2"></i>${doc.embeddingModel || 'N/A'}</dd>
+                                    
+                                    <dt>Nivel de acceso:</dt>
+                                    <dd>${doc.accessLevel === 'Public' ? 
+                                        '<span class="badge bg-success"><i class="fas fa-globe me-1"></i>Público</span>' : 
+                                        '<span class="badge bg-secondary">Privado</span>'}</dd>
+                                </dl>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <h6><i class="fas fa-file-contract me-2"></i>Resumen del contenido</h6>
+                            <div class="alert alert-secondary mt-2">
+                                ${doc.contentSummary || 'No hay resumen disponible'}
+                            </div>
+                        </div>
+                        
+                        ${doc.chunkDetails && doc.chunkDetails.length > 0 ? `
+                        <div class="mt-4">
+                            <h6><i class="fas fa-layer-group me-2"></i>Fragmentos del documento</h6>
+                            <div class="table-responsive mt-3">
+                                <table class="table table-sm table-dark">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th><i class="fas fa-ruler me-1"></i>Caracteres</th>
+                                            <th><i class="fas fa-hashtag me-1"></i>Tokens</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${doc.chunkDetails.map(chunk => `
+                                            <tr>
+                                                <td class="fw-semibold">${chunk.index + 1}</td>
+                                                <td>${chunk.contentLength.toLocaleString()}</td>
+                                                <td><span class="badge bg-secondary">${chunk.tokenCount}</span></td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        ` : ''}
+                    `;
+                    
+                    $('#document-details').html(html);
+                    const modal = new bootstrap.Modal(document.getElementById('detailsModal'));
+                    modal.show();
+                } else {
+                    showAlert(response.error, 'danger');
+                }
+            }).fail(function() {
+                showAlert('Error al cargar detalles del documento', 'danger');
+            });
+        }
+
+        function showDeleteConfirmation(documentId, documentTitle) {
+            currentDocumentId = documentId;
+            $('#delete-document-info').html(`
+                <div class="alert alert-warning">
+                    <div><strong>Documento:</strong> ${documentTitle}</div>
+                    <div><strong>ID:</strong> ${documentId}</div>
+                </div>
+            `);
+            
+            const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+            modal.show();
+            
+            $('#confirm-delete-btn').off('click').on('click', function() {
+                deleteDocument(documentId);
+                modal.hide();
+            });
+        }
+
+        function deleteDocument(documentId) {
+            $.ajax({
+                url: '/Admin/DeleteDocument',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ documentId: documentId }),
+                success: function(response) {
+                    if (response.success) {
+                        showAlert('Documento eliminado exitosamente de la base de conocimiento', 'success');
+                        
+                        const detailsModal = bootstrap.Modal.getInstance(document.getElementById('detailsModal'));
+                        if (detailsModal) detailsModal.hide();
+                        
+                        loadStatistics();
+                        loadDocuments();
+                    } else {
+                        showAlert('Error: ' + response.error, 'danger');
+                    }
+                },
+                error: function() {
+                    showAlert('Error al eliminar el documento', 'danger');
+                }
+            });
+        }
+
+        function refreshDocuments() {
+            showAlert('Actualizando documentos...', 'info');
+            loadStatistics();
+            loadDocuments();
+        }
+
+        function logout() {
+            if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
+                window.location.href = '/Auth/Login';
+            }
+        }
+
+        // Funciones de utilidad
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function getFileTypeIcon(fileType) {
+            const type = fileType.toLowerCase();
+            if (type.includes('pdf')) return '<i class="fas fa-file-pdf text-danger me-2"></i>';
+            if (type.includes('doc')) return '<i class="fas fa-file-word text-primary me-2"></i>';
+            if (type.includes('txt')) return '<i class="fas fa-file-alt text-secondary me-2"></i>';
+            if (type.includes('md')) return '<i class="fas fa-file-code text-info me-2"></i>';
+            return '<i class="fas fa-file me-2"></i>';
+        }
+
+        function getStatusBadge(status) {
+            switch(status) {
+                case 'Completed': 
+                    return '<span class="badge bg-success"><i class="fas fa-check-circle me-1"></i>Completado</span>';
+                case 'Processing':
+                case 'ExtractingText':
+                case 'GeneratingEmbeddings': 
+                    return '<span class="badge bg-warning"><i class="fas fa-sync-alt me-1"></i>Procesando</span>';
+                case 'Error':
+                case 'ExtractionFailed': 
+                    return '<span class="badge bg-danger"><i class="fas fa-exclamation-circle me-1"></i>Error</span>';
+                default: 
+                    return `<span class="badge bg-secondary">${status}</span>`;
+            }
+        }
+
+        function showAlert(message, type) {
+            const alertId = 'alert-' + Date.now();
+            const icon = {
+                'success': 'check-circle',
+                'danger': 'exclamation-circle',
+                'info': 'info-circle',
+                'warning': 'exclamation-triangle'
+            }[type] || 'info-circle';
+
+            const alertHtml = `
+                <div id="${alertId}" class="alert alert-${type} alert-dismissible fade show" role="alert">
+                    <i class="fas fa-${icon} me-2"></i>
+                    ${message}
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+                </div>
+            `;
+            
+            $('.admin-container').prepend(alertHtml);
+            
+            setTimeout(() => {
+                $(`#${alertId}`).alert('close');
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

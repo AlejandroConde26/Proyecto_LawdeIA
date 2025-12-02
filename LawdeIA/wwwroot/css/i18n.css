@@ -1,0 +1,41 @@
+/* ===== Selector de idioma (EN | ES) ===== */
+.lang-switch{
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  margin-left: .75rem;
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  white-space: nowrap;
+}
+.lang-switch .sep{ opacity: .5; }
+
+.lang-btn{
+  border: 0;
+  background: none;
+  font: inherit;
+  padding: .2rem .1rem;
+  cursor: pointer;
+  opacity: .75;
+  transition: opacity .2s ease, transform .06s ease;
+}
+.lang-btn[aria-pressed="true"]{
+  opacity: 1;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: .2em;
+}
+.lang-btn:active{ transform: scale(0.98); }
+
+.lang-hint{
+  font-size: .75em;
+  opacity: .6;
+  margin-left: .15rem;
+}
+
+/* Nitidez tipográfica suave (opcional, no rompe nada) */
+#navbar{
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
