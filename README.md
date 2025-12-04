@@ -1,5 +1,4 @@
-UFFFFFFFFFFFFFFFFFFFF
-grupo 
+
 # LAWIDEIA
 
 <table border="1">
