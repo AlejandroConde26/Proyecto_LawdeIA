@@ -12,23 +12,23 @@ grupo
   <tbody>
     <tr>
       <td>Jofre Alexis Montes Saravia</td>
-      <td></td>
+      <td>20%</td>
     </tr>
     <tr>
-      <td></td>
-      <td></td>
+      <td>Conde Chuquichanca, Alejandro Benjamin</td>
+      <td>20%</td>
     </tr>
     <tr>
       <td>Victor Manuel Huaman Victorio</td>
-      <td></td>
+      <td>20%</td>
     </tr>
     <tr>
-      <td></td>
-      <td></td>
+      <td>Huamani Ttito, Erick Josué</td>
+      <td>20%</td>
     </tr>
     <tr>
-      <td></td>
-      <td></td>
+      <td>Bocanegra Cortez, Luis Ángel</td>
+      <td>20%</td>
     </tr>
     <tr>
       <td><strong>TOTAL</strong></td>
