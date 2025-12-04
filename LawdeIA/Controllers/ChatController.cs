@@ -20,7 +20,7 @@ namespace LawdeIA.Controllers
         private readonly HttpClient _httpClient;
 
         // CONFIGURACIÓN
-        private const string GEMINI_API_KEY = "AIzaSyAMlCtiSuhZyYoYWpqySSTc8YOTzHUbNoo";
+        private const string GEMINI_API_KEY = "";
         private const string GEMINI_CHAT_MODEL = "gemini-2.0-flash";
         private const string GEMINI_EMBEDDING_MODEL = "text-embedding-004";
 

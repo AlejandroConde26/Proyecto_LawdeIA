@@ -417,28 +417,41 @@
         .message {
             width: 100%;
             display: flex;
+            justify-content: center; /* TODO centrado */
             margin-bottom: 1.5rem;
         }
 
-        .msg-inner {
-            max-width: 780px;
-            width: 100%;
-            margin: 0 auto; 
-        }
+            /* Contenedor interno para centrar el contenido real del mensaje */
+            .message .bubble {
+                max-width: 780px; /* EXACTO como GPT */
+                width: 100%;
+                padding-left: 0;
+                padding-right: 0;
+                background: transparent !important;
+                box-shadow: none !important;
+            }
 
-        .message.ai {
-            justify-content: flex-start;
-        }
-
-        .message.user {
+        /* Mensaje del usuario a la derecha */
+        .user {
             justify-content: flex-end;
         }
 
-        .bubble {
-            background: transparent !important;
-            box-shadow: none !important;
-            padding: 0;
-            color: var(--color-text);
+            .user .bubble {
+                text-align: right;
+            }
+
+        /* Mensaje de la IA a la izquierda pero dentro del canal */
+        .ai {
+            justify-content: flex-start;
+        }
+
+            .ai .bubble {
+                text-align: left;
+            }
+
+        .system .bubble {
+            background: var(--color-warning);
+            color: #ffffff;
             line-height: 1.6;
             white-space: pre-wrap;
         }
@@ -498,6 +511,7 @@
             display: flex;
             gap: 0.5rem;
         }
+
         .send-btn {
             position: absolute;
             right: 1rem;
@@ -609,6 +623,34 @@
                 font-size: 0.95em;
             }
 
+        .message .bubble {
+            max-width: 780px; /* EXACTO como GPT */
+            width: 100%;
+            margin: 0 auto;
+            padding-left: 0;
+            padding-right: 0;
+            background: transparent !important;
+            box-shadow: none !important;
+        }
+
+        .btn-attach {
+            position: absolute;
+            top: -30px;
+            right: -9px;
+            background: none;
+            border: none;
+            color: var(--color-text-light);
+            cursor: pointer;
+            padding: 0.4rem;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+            .btn-attach:hover {
+                color: var(--color-primary);
+                background: var(--color-secondary);
+            }
+
         /* Animations */
         @@keyframes typing {
             0%, 100% {
@@ -686,7 +728,6 @@
         <div class="chat-sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="brand-logo"><i class="fas fa-scale-balanced"></i> LawdeIA</div>
-                <button id="theme-toggle" class="theme-toggle"><i class="fas fa-moon"></i></button>
             </div>
 
             <button id="new-chat-btn" class="new-chat-btn"><i class="fas fa-plus"></i> Nueva Consulta</button>
@@ -738,6 +779,7 @@
                 <div class="input-container">
                     <div class="input-actions">
                         <input type="file" id="file-input" hidden accept=".txt,.md,.pdf,.jpg,.jpeg,.png">
+                        <button id="upload-btn" class="btn-attach" title="Adjuntar documento"><i class="fas fa-paperclip"></i></button>
                     </div>
                     <input type="text" id="message-input" placeholder="Escribe tu consulta legal..." autocomplete="off">
                     <button id="send-btn" class="send-btn"><i class="fas fa-paper-plane"></i></button>
