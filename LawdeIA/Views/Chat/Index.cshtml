@@ -12,23 +12,23 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        :root {
+            :root {
             --color-primary: #ffffff;
-            --color-secondary: #1a1a1a;
+            --color-secondary: #222222; 
             --color-accent: #334155;
-            --color-border: #374151;
+            --color-border: #333333;
             --color-text: #ffffff;
             --color-text-light: #9ca3af;
-            --color-ai-bubble: #1f2937;
+            --color-ai-bubble: #1a1a1a; 
             --color-user-bubble: #2563eb;
-            --color-sidebar: #111827;
-            --color-background: #0f0f0f;
-            --color-input-bg: #1f2937;
+            --color-sidebar: #000000;
+            --color-background: #000000; 
+            --color-input-bg: #1a1a1a;
             --surface-l1: #1a1a1a;
             --color-success: #10b981;
             --color-danger: #ef4444;
             --color-warning: #f59e0b;
-        }
+            }
 
         [data-theme="light"] {
             --color-primary: #1a1a1a;
@@ -634,9 +634,9 @@
         }
 
         .btn-attach {
-            position: absolute;
-            top: -30px;
-            right: -9px;
+            position: absolute !important;
+            top: -34px !important;
+            right: -9px !important;
             background: none;
             border: none;
             color: var(--color-text-light);
@@ -744,10 +744,15 @@
 
             <div class="sidebar-footer">
                 <div class="user-info">
-                    <div class="user-avatar" id="user-avatar">U</div>
+                    <div class="user-avatar" id="user-avatar">@(User.Identity?.Name?.FirstOrDefault() ?? 'U')</div>
                     <div class="user-details">
-                        <div class="user-name" id="user-name">Usuario</div>
-                        <div class="user-email" id="user-email">usuario@ejemplo.com</div>
+                        <div class="user-name">
+                            @(User.Identity?.Name ?? "Usuario")
+                        </div>
+
+                        <div class="user-email">
+                            @(User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value ?? "")
+                        </div>
                     </div>
                 </div>
                 <form asp-controller="Auth" asp-action="Logout" method="post" style="display:inline;">
