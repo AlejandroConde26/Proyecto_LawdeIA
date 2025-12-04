@@ -448,25 +448,28 @@ function appendMessage(m) {
 
     // Remove empty state if it exists
     const emptyChat = messagesDiv.querySelector('.empty-chat');
-    if (emptyChat) {
-        emptyChat.remove();
-    }
+    if (emptyChat) emptyChat.remove();
 
+    // Contenedor del mensaje
     const messageEl = document.createElement("div");
     messageEl.className = `message ${m.senderType.toLowerCase()}`;
 
-    const timestamp = m.timestamp || new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+    // Contenedor interno (necesario para centrar)
+    const inner = document.createElement("div");
+    inner.className = "msg-inner";
 
-    messageEl.innerHTML = `
-        <div class="bubble">
-            ${formatMessageContent(m.content)}
-            <div class="message-time">${timestamp}</div>
-        </div>
-    `;
+    // Burbuja
+    const bubble = document.createElement("div");
+    bubble.className = "bubble";
+    bubble.innerHTML = formatMessageContent(m.content);
 
+    inner.appendChild(bubble);
+    messageEl.appendChild(inner);
     messagesDiv.appendChild(messageEl);
+
     scrollToBottom();
 }
+
 
 function formatMessageContent(content) {
     if (!content) return '';

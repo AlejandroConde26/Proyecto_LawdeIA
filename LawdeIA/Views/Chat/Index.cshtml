@@ -415,53 +415,32 @@
         }
 
         .message {
+            width: 100%;
             display: flex;
             margin-bottom: 1.5rem;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-            animation: fadeInUp 0.3s ease;
         }
 
-        .user {
-            justify-content: flex-end;
+        .msg-inner {
+            max-width: 780px;
+            width: 100%;
+            margin: 0 auto; 
         }
 
-        .ai {
+        .message.ai {
             justify-content: flex-start;
         }
 
-        .system {
-            justify-content: center;
+        .message.user {
+            justify-content: flex-end;
         }
 
         .bubble {
-            max-width: 85%;
-            padding: 1rem 1.25rem;
-            border-radius: 1rem;
-            line-height: 1.5;
-            font-size: 0.95rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            white-space: pre-wrap;
-            word-wrap: break-word;
-        }
-
-        .user .bubble {
-            background: var(--color-user-bubble);
-            color: white;
-        }
-
-        .ai .bubble {
-            background: var(--color-ai-bubble);
+            background: transparent !important;
+            box-shadow: none !important;
+            padding: 0;
             color: var(--color-text);
-            border: 1px solid var(--color-border);
-        }
-
-        .system .bubble {
-            background: var(--color-warning);
-            color: #000;
-            font-size: 0.875rem;
-            text-align: center;
+            line-height: 1.6;
+            white-space: pre-wrap;
         }
 
         .message-time {
@@ -519,22 +498,6 @@
             display: flex;
             gap: 0.5rem;
         }
-
-        .btn-attach {
-            background: none;
-            border: none;
-            color: var(--color-text-light);
-            cursor: pointer;
-            padding: 0.5rem;
-            border-radius: 6px;
-            transition: all 0.2s;
-        }
-
-            .btn-attach:hover {
-                color: var(--color-primary);
-                background: var(--color-secondary);
-            }
-
         .send-btn {
             position: absolute;
             right: 1rem;
@@ -775,7 +738,6 @@
                 <div class="input-container">
                     <div class="input-actions">
                         <input type="file" id="file-input" hidden accept=".txt,.md,.pdf,.jpg,.jpeg,.png">
-                        <button id="upload-btn" class="btn-attach" title="Adjuntar documento"><i class="fas fa-paperclip"></i></button>
                     </div>
                     <input type="text" id="message-input" placeholder="Escribe tu consulta legal..." autocomplete="off">
                     <button id="send-btn" class="send-btn"><i class="fas fa-paper-plane"></i></button>
